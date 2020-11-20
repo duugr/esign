@@ -1,0 +1,19 @@
+{
+    "name": "kang/esign",
+    "description": "e签宝 悟空接口",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Russell",
+            "email": "kangyunkui@egeyed.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "ESign\\": "src/"
+        }
+    }
+}
