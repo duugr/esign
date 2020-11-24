@@ -2,6 +2,7 @@
 
 namespace ESign\Traits;
 
+use ESign\Config;
 use GuzzleHttp\Exception\RequestException;
 
 /**
@@ -46,25 +47,8 @@ trait Accounts
 			"email"            => $email
 		];
 
-		try {
-			$uri      = $this->getUri(__FUNCTION__);
-			$response = $this->client->post($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data']['accountId'])) {
-				return $result['data']['accountId'];
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		$uri = Config::Accounts(__FUNCTION__);
+		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
 
 	//个人账户修改(按照账号ID修改)
@@ -77,27 +61,9 @@ trait Accounts
 			"email"    => $email
 		];
 
-		try {
+		$uri = Config::Accounts(__FUNCTION__, $accountId);
 
-			$uri = sprintf("%s/%s", $this->getUri(str_replace('ESign\Traits\\', '', __TRAIT__)), $accountId);
-
-			$response = $this->client->put($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data']['accountId'])) {
-				return $result['data'];
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->put($uri, array_merge($this->requestData, $data));
 	}
 
 	//个人账户修改(按照第三方用户ID修改)
@@ -110,151 +76,48 @@ trait Accounts
 			"mobile"   => $mobile,
 			"email"    => $email
 		];
+		$uri  = Config::Accounts(__FUNCTION__);
 
-		try {
-			$uri = $this->getUri(__FUNCTION__);
-
-			$response = $this->client->put($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data']['accountId'])) {
-				return $result['data'];
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->put($uri, array_merge($this->requestData, $data));
 	}
 
 	//查询个人账户（按照账户ID查询）
 	public function accountsGetByAccountId($accountId) {
-		try {
-			$uri = sprintf("%s/%s", $this->getUri(str_replace('ESign\Traits\\', '', __TRAIT__)), $accountId);
+		$uri = Config::Accounts(__FUNCTION__, $accountId);
 
-			$response = $this->client->get($uri, $this->requestData);
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data']['accountId'])) {
-				return $result['data'];
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->get($uri, $this->requestData);
 	}
 
 	//查询个人账户（按照第三方用户ID查询）
 	public function accountsGetByThirdId($thirdPartyUserId) {
-		try {
-			$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
-			$uri  = $this->getUri(__FUNCTION__);
+		$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
+		$uri  = Config::Accounts(__FUNCTION__);
 
-			$response = $this->client->get($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data']['accountId'])) {
-				return $result['data'];
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->get($uri, array_merge($this->requestData, $data));
 	}
 
 	//注销个人账户（按照账号ID注销）
 	public function accountsDeleteByAccountId($accountId) {
-		try {
-			$uri = sprintf("%s/%s", $this->getUri(str_replace('ESign\Traits\\', '', __TRAIT__)), $accountId);
+		$uri = Config::Accounts(__FUNCTION__, $accountId);
 
-			$response = $this->client->delete($uri, $this->requestData);
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0) {
-				return true;
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		$response = $this->client->delete($uri, $this->requestData);
+		return $response;
 	}
 
 	//注销个人账户（按照第三方用户ID注销）
 	public function accountsDeleteByThirdId($thirdPartyUserId) {
-		try {
-			$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
-			$uri  = $this->getUri(__FUNCTION__);
-
-			$response = $this->client->get($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data'])) {
-				return true;
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		$data     = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
+		$uri      = Config::Accounts(__FUNCTION__);
+		$response = $this->client->delete($uri, array_merge($this->requestData, $data));
+		return $response;
 	}
 
 	//设置签署密码
 	public function accountsSetSignPwd($accountId, $password) {
-		try {
-			$uri = $this->getUri(__FUNCTION__, '/'.$accountId.'/');
+		$uri = Config::Accounts(__FUNCTION__, '/'.$accountId.'/');
 
-			$data = ["password" => md5($password)];
-
-			$response = $this->client->get($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data'])) {
-				return true;
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		$data = ["password" => md5($password)];
+		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
 
 	/**
@@ -266,28 +129,10 @@ trait Accounts
 	 * @return false|mixed
 	 */
 	public function accountsSignAuth($accountId, $deadline) {
-		try {
+		$data = empty($deadline) ? [] : ['deadline' => $deadline];
+		$uri  = Config::Accounts(__FUNCTION__, '/'.$accountId);
 
-			$data = empty($deadline) ? [] : ['deadline' => $deadline];
-			$uri  = $this->getUri(__FUNCTION__, '/'.$accountId);
-
-			$response = $this->client->delete($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data'])) {
-				return true;
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->delete($uri, array_merge($this->requestData, $data));
 	}
 
 }

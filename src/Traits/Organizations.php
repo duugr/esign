@@ -4,6 +4,7 @@
 namespace ESign\Traits;
 
 
+use ESign\Config;
 use GuzzleHttp\Exception\RequestException;
 
 trait Organizations
@@ -276,5 +277,7 @@ trait Organizations
 
 		return false;
 	}
+
+
 
 }

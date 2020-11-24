@@ -2,26 +2,21 @@
 
 namespace ESign;
 
+use ESign\Service\Http;
+
 use ESign\Traits\Accounts;
 use ESign\Traits\Organizations;
-
-//use ESign\Traits\Notify;
-//use ESign\Traits\Position;
-//use ESign\Traits\Seals;
-//use ESign\Traits\SignFlows;
+use ESign\Traits\Seals;
 use ESign\Traits\Token;
-
-//use ESign\Traits\Upload;
-
-//use ESign\Service\Accounts;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
+use ESign\Traits\Files;
 
 class ESign
 {
 	use Token;
 	use Accounts;
 	use Organizations;
+	use Seals;
+	use Files;
 
 	//测试环境请求地址
 	private $hostDev = "https://smlopenapi.esign.cn/v1/";
@@ -29,7 +24,6 @@ class ESign
 	private $hostProd = "https://openapi.esign.cn/v1/";
 
 	private $host        = "https://openapi.esign.cn/v1/";
-	private $urlGetToken = "oauth2/access_token";
 
 	//appId
 	private $appId = "";
@@ -39,8 +33,6 @@ class ESign
 	private   $token;
 	protected $client;
 	protected $requestData;
-	protected $errCode;
-	protected $errMessage;
 
 	public function __construct($appId, $secret, $env = 'prod') {
 		if ($env == 'dev') {
@@ -48,14 +40,7 @@ class ESign
 		}
 		$this->appId  = $appId;
 		$this->secret = $secret;
-
-		$this->client = new Client([
-			// Base URI is used with relative requests
-			'base_uri' => $this->host,
-			// You can set any number of default request options.
-			//			'timeout'  => 5.0,
-
-		]);
+		$this->client = new Http($this->host);
 
 		$this->GetToken();
 
@@ -92,16 +77,10 @@ class ESign
 	}
 
 	public function getErrorCode() {
-		return $this->errCode;
+		return $this->client->errCode;
 	}
 
 	public function getErrorMessage() {
-		return $this->errMessage;
-	}
-
-	protected function getUri($path, $delimiter = '/'): string {
-		return preg_replace_callback('/(^.*?)(?=[A-Z])([A-Z])/u', function ($matches) use ($delimiter) {
-			return lcfirst($matches[1]).$delimiter.lcfirst($matches[2]);
-		}, $path);
+		return $this->client->errMessage;
 	}
 }
