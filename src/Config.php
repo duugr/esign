@@ -19,10 +19,10 @@ class Config
 	}
 	public static function Org($path, $delimiter = '/') {
 		switch ($path) {
-			case 'accountsGetByAccountId':
-			case 'accountsUpdateByAccountId':
-			case 'accountsDeleteByAccountId':
-				return str_replace('{accountId}', $delimiter,'accounts/{accountId}');
+			case 'organizationsGetByOrgId':
+			case 'organizationsUpdateByOrgId':
+			case 'organizationsDeleteByOrgId':
+				return str_replace('{orgId}', $delimiter,'organizations/{orgId}');
 			default:
 				return static::getUri($path, $delimiter);
 		}

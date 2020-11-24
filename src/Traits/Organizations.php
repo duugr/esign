@@ -45,25 +45,10 @@ trait Organizations
 			'orgLegalIdNumber' => $orgLegalIdNumber,
 			'orgLegalName'     => $orgLegalName,
 		];
-		try {
-			$uri      = $this->getUri(__FUNCTION__);
-			$response = $this->client->post($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
 
-			$result = (array) json_decode($body, true);
+		$uri      = Config::Org(__FUNCTION__);
 
-			if ($result['code'] == 0 && isset($result['data']['orgId'])) {
-				return $result['data']['orgId'];
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
 
 	/**
@@ -100,27 +85,9 @@ trait Organizations
 			"orgLegalName"     => $orgLegalName
 		];
 
-		try {
+		$uri = Config::Org(__FUNCTION__, $orgId);
 
-			$uri = sprintf("%s/%s", $this->getUri(str_replace('ESign\Traits\\', '', __TRAIT__)), $orgId);
-
-			$response = $this->client->put($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data']['orgId'])) {
-				return $result['data'];
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->put($uri, array_merge($this->requestData, $data));
 	}
 
 	/**
@@ -154,26 +121,9 @@ trait Organizations
 			"idNumber" => $idNumber
 		];
 
-		try {
-			$uri = $this->getUri(__FUNCTION__);
+		$uri = Config::Org(__FUNCTION__);
 
-			$response = $this->client->put($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data']['orgId'])) {
-				return $result['data'];
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->put($uri, array_merge($this->requestData, $data));
 	}
 
 	/**
@@ -184,100 +134,33 @@ trait Organizations
 	 * @return false|mixed
 	 */
 	public function organizationsGetByOrgId($orgId) {
-		try {
-			$uri = sprintf("%s/%s", $this->getUri(str_replace('ESign\Traits\\', '', __TRAIT__)), $orgId);
+		$uri = Config::Org(__FUNCTION__, $orgId);
 
-			$response = $this->client->get($uri, $this->requestData);
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data']['orgId'])) {
-				return $result['data'];
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->get($uri, $this->requestData);
 	}
+
 	//查询机构账号（按照第三方机构ID查询）
 	public function organizationsGetByThirdId($thirdPartyUserId) {
-		try {
-			$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
-			$uri  =$this->getUri(__FUNCTION__);
+		$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
+		$uri  = Config::Org(__FUNCTION__);
 
-			$response = $this->client->get($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data']['orgId'])) {
-				return $result['data'];
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->get($uri, array_merge($this->requestData, $data));
 	}
 
 	//注销机构账号（按照账号ID注销）
 	public function organizationsDeleteByOrgId($orgId) {
-		try {
-			$uri = sprintf("%s/%s", $this->getUri(str_replace('ESign\Traits\\', '', __TRAIT__)), $orgId);
+		$uri = Config::Org(__FUNCTION__, $orgId);
 
-			$response = $this->client->delete($uri, $this->requestData);
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0) {
-				return true;
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->delete($uri, $this->requestData);
 	}
+
 	//注销机构账号（按照第三方机构ID注销）
 	public function organizationsDeleteByThirdId($thirdPartyUserId) {
-		try {
-			$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
-			$uri  = $this->getUri(__FUNCTION__);
+		$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
+		$uri  = Config::Org(__FUNCTION__);
 
-			$response = $this->client->get($uri, array_merge($this->requestData, $data));
-			$body     = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data'])) {
-				return true;
-			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
-			}
-		} catch (RequestException $e) {
-			$this->errCode    = $e->getCode();
-			$this->errMessage = $e->getMessage();
-		}
-
-		return false;
+		return $this->client->get($uri, array_merge($this->requestData, $data));
 	}
-
 
 
 }
