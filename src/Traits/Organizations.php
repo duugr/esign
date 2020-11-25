@@ -4,7 +4,7 @@
 namespace ESign\Traits;
 
 
-use ESign\Config;
+use ESign\Urls;
 use GuzzleHttp\Exception\RequestException;
 
 trait Organizations
@@ -46,7 +46,7 @@ trait Organizations
 			'orgLegalName'     => $orgLegalName,
 		];
 
-		$uri      = Config::Org(__FUNCTION__);
+		$uri      = Urls::Org(__FUNCTION__);
 
 		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
@@ -85,7 +85,7 @@ trait Organizations
 			"orgLegalName"     => $orgLegalName
 		];
 
-		$uri = Config::Org(__FUNCTION__, $orgId);
+		$uri = Urls::Org(__FUNCTION__, $orgId);
 
 		return $this->client->put($uri, array_merge($this->requestData, $data));
 	}
@@ -121,7 +121,7 @@ trait Organizations
 			"idNumber" => $idNumber
 		];
 
-		$uri = Config::Org(__FUNCTION__);
+		$uri = Urls::Org(__FUNCTION__);
 
 		return $this->client->put($uri, array_merge($this->requestData, $data));
 	}
@@ -134,7 +134,7 @@ trait Organizations
 	 * @return false|mixed
 	 */
 	public function organizationsGetByOrgId($orgId) {
-		$uri = Config::Org(__FUNCTION__, $orgId);
+		$uri = Urls::Org(__FUNCTION__, $orgId);
 
 		return $this->client->get($uri, $this->requestData);
 	}
@@ -142,14 +142,14 @@ trait Organizations
 	//查询机构账号（按照第三方机构ID查询）
 	public function organizationsGetByThirdId($thirdPartyUserId) {
 		$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
-		$uri  = Config::Org(__FUNCTION__);
+		$uri  = Urls::Org(__FUNCTION__);
 
 		return $this->client->get($uri, array_merge($this->requestData, $data));
 	}
 
 	//注销机构账号（按照账号ID注销）
 	public function organizationsDeleteByOrgId($orgId) {
-		$uri = Config::Org(__FUNCTION__, $orgId);
+		$uri = Urls::Org(__FUNCTION__, $orgId);
 
 		return $this->client->delete($uri, $this->requestData);
 	}
@@ -157,7 +157,7 @@ trait Organizations
 	//注销机构账号（按照第三方机构ID注销）
 	public function organizationsDeleteByThirdId($thirdPartyUserId) {
 		$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
-		$uri  = Config::Org(__FUNCTION__);
+		$uri  = Urls::Org(__FUNCTION__);
 
 		return $this->client->get($uri, array_merge($this->requestData, $data));
 	}

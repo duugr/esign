@@ -4,7 +4,7 @@
 namespace ESign\Traits;
 
 
-use ESign\Config;
+use ESign\Urls;
 use ESign\Util\Http;
 use GuzzleHttp\Exception\RequestException;
 
@@ -19,7 +19,7 @@ trait Token
 			]
 		];
 
-		$response = $this->client->get(Config::AccessToken, $data);
+		$response = $this->client->get(Urls::AccessToken, $data);
 		if (is_bool($response)) {
 			return $response;
 		}

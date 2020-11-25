@@ -3,7 +3,7 @@
 
 namespace ESign\Traits;
 
-use ESign\Config;
+use ESign\Urls;
 
 /**
  * 印章服务API
@@ -36,7 +36,7 @@ trait Seals
 	 *                width 印章宽度, 默认95px
 	 */
 	public function CreatePersonal(string $accountId, string $color, string $type, int $height = 0, int $width = 0, string $alias = '') {
-		$uri  = Config::Seals(__FUNCTION__, $accountId);
+		$uri  = Urls::Seals(__FUNCTION__, $accountId);
 		$data = [
 			'color' => $color,
 			'type'  => $type,
@@ -81,7 +81,7 @@ trait Seals
 	 *                width 印章宽度, 默认95px
 	 */
 	public function CreateOfficial(string $orgId, string $color, string $type, string $central, int $height = 0, int $width = 0, string $htext = '', string $qtext = '', string $alias = '') {
-		$uri  = Config::Seals(__FUNCTION__, $orgId);
+		$uri  = Urls::Seals(__FUNCTION__, $orgId);
 		$data = [
 			'color'   => $color,
 			'type'    => $type,
@@ -133,7 +133,7 @@ trait Seals
 		if ($transparentFlag) {
 			$data['transparentFlag'] = $transparentFlag;
 		}
-		$uri = Config::Seals(__FUNCTION__, $accountId);
+		$uri = Urls::Seals(__FUNCTION__, $accountId);
 		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
 
@@ -146,7 +146,7 @@ trait Seals
 			]
 		];
 
-		$uri = Config::Seals(__FUNCTION__, $accountId);
+		$uri = Urls::Seals(__FUNCTION__, $accountId);
 		return $this->client->get($uri, array_merge($this->requestData, $data));
 	}
 
@@ -159,19 +159,19 @@ trait Seals
 			]
 		];
 
-		$uri = Config::Seals(__FUNCTION__, $orgId);
+		$uri = Urls::Seals(__FUNCTION__, $orgId);
 		return $this->client->get($uri, array_merge($this->requestData, $data));
 	}
 
 	//删除个人印章
 	public function RemovePersonal($accountId,$sealId) {
-		$uri = Config::Seals(__FUNCTION__, [$accountId, $sealId]);
+		$uri = Urls::Seals(__FUNCTION__, [$accountId, $sealId]);
 		return $this->client->delete($uri, $this->requestData);
 	}
 
 	//删除机构印章
 	public function RemoveOfficial($accountId,$sealId) {
-		$uri = Config::Seals(__FUNCTION__, [$accountId, $sealId]);
+		$uri = Urls::Seals(__FUNCTION__, [$accountId, $sealId]);
 		return $this->client->delete($uri, $this->requestData);
 	}
 }

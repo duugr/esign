@@ -3,7 +3,7 @@
 
 namespace ESign\Traits;
 
-use ESign\Config;
+use ESign\Urls;
 
 /**
  * 文件模板API
@@ -63,7 +63,7 @@ trait Files
 			'accountId'   => $accountId,
 		];
 
-		$uri = Config::Files(__FUNCTION__);
+		$uri = Urls::Files(__FUNCTION__);
 
 		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
@@ -97,7 +97,7 @@ trait Files
 			'accountId'   => $accountId,
 		];
 
-		$uri = Config::Files(__FUNCTION__);
+		$uri = Urls::Files(__FUNCTION__);
 
 		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
@@ -127,7 +127,7 @@ trait Files
 			$data['structComponent']['key'] = $componentKey;
 		}
 
-		$uri = Config::Files(__FUNCTION__, $templateId);
+		$uri = Urls::Files(__FUNCTION__, $templateId);
 
 		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
@@ -142,7 +142,7 @@ trait Files
 	 * @return mixed
 	 */
 	public function DocDeleteComponents($templateId, $ids) {
-		$uri = Config::Files(__FUNCTION__, [$templateId, $ids]);
+		$uri = Urls::Files(__FUNCTION__, [$templateId, $ids]);
 
 		return $this->client->delete($uri, $this->requestData);
 	}
@@ -155,7 +155,7 @@ trait Files
 	 * @return mixed
 	 */
 	public function DocTemplates($templateId) {
-		$uri = Config::Files(__FUNCTION__, $templateId);
+		$uri = Urls::Files(__FUNCTION__, $templateId);
 
 		return $this->client->get($uri, $this->requestData);
 	}
@@ -178,7 +178,7 @@ trait Files
 	 *                updateTime    更新时间
 	 */
 	public function DocGetBaseInfo($templateId) {
-		$uri = Config::Files(__FUNCTION__, $templateId);
+		$uri = Urls::Files(__FUNCTION__, $templateId);
 
 		return $this->client->get($uri, $this->requestData);
 	}
@@ -205,7 +205,7 @@ trait Files
 			'simpleFormFields' => $ids,
 			'templateId'       => $templateId,
 		];
-		$uri  = Config::Files(__FUNCTION__);
+		$uri  = Urls::Files(__FUNCTION__);
 
 		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
@@ -237,7 +237,7 @@ trait Files
 	 *                pdfTotalPages    pdf文件总页数,仅当文件类型为pdf时有值
 	 */
 	public function GetFiles($fileId) {
-		$uri = Config::Files(__FUNCTION__, $fileId);
+		$uri = Urls::Files(__FUNCTION__, $fileId);
 
 		return $this->client->get($uri, $this->requestData);
 	}
@@ -282,7 +282,7 @@ trait Files
 			$data['thirdOrderNo'] = $thirdOrderNo;
 		}
 
-		$uri = Config::Files(__FUNCTION__);
+		$uri = Urls::Files(__FUNCTION__);
 
 		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}

@@ -2,7 +2,7 @@
 
 namespace ESign\Traits;
 
-use ESign\Config;
+use ESign\Urls;
 use GuzzleHttp\Exception\RequestException;
 
 /**
@@ -47,7 +47,7 @@ trait Accounts
 			"email"            => $email
 		];
 
-		$uri = Config::Accounts(__FUNCTION__);
+		$uri = Urls::Accounts(__FUNCTION__);
 		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
 
@@ -61,7 +61,7 @@ trait Accounts
 			"email"    => $email
 		];
 
-		$uri = Config::Accounts(__FUNCTION__, $accountId);
+		$uri = Urls::Accounts(__FUNCTION__, $accountId);
 
 		return $this->client->put($uri, array_merge($this->requestData, $data));
 	}
@@ -76,14 +76,14 @@ trait Accounts
 			"mobile"   => $mobile,
 			"email"    => $email
 		];
-		$uri  = Config::Accounts(__FUNCTION__);
+		$uri  = Urls::Accounts(__FUNCTION__);
 
 		return $this->client->put($uri, array_merge($this->requestData, $data));
 	}
 
 	//查询个人账户（按照账户ID查询）
 	public function accountsGetByAccountId($accountId) {
-		$uri = Config::Accounts(__FUNCTION__, $accountId);
+		$uri = Urls::Accounts(__FUNCTION__, $accountId);
 
 		return $this->client->get($uri, $this->requestData);
 	}
@@ -91,14 +91,14 @@ trait Accounts
 	//查询个人账户（按照第三方用户ID查询）
 	public function accountsGetByThirdId($thirdPartyUserId) {
 		$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
-		$uri  = Config::Accounts(__FUNCTION__);
+		$uri  = Urls::Accounts(__FUNCTION__);
 
 		return $this->client->get($uri, array_merge($this->requestData, $data));
 	}
 
 	//注销个人账户（按照账号ID注销）
 	public function accountsDeleteByAccountId($accountId) {
-		$uri = Config::Accounts(__FUNCTION__, $accountId);
+		$uri = Urls::Accounts(__FUNCTION__, $accountId);
 
 		$response = $this->client->delete($uri, $this->requestData);
 		return $response;
@@ -107,14 +107,14 @@ trait Accounts
 	//注销个人账户（按照第三方用户ID注销）
 	public function accountsDeleteByThirdId($thirdPartyUserId) {
 		$data     = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
-		$uri      = Config::Accounts(__FUNCTION__);
+		$uri      = Urls::Accounts(__FUNCTION__);
 		$response = $this->client->delete($uri, array_merge($this->requestData, $data));
 		return $response;
 	}
 
 	//设置签署密码
 	public function accountsSetSignPwd($accountId, $password) {
-		$uri = Config::Accounts(__FUNCTION__, '/'.$accountId.'/');
+		$uri = Urls::Accounts(__FUNCTION__, '/'.$accountId.'/');
 
 		$data = ["password" => md5($password)];
 		return $this->client->post($uri, array_merge($this->requestData, $data));
@@ -130,7 +130,7 @@ trait Accounts
 	 */
 	public function accountsSignAuth($accountId, $deadline) {
 		$data = empty($deadline) ? [] : ['deadline' => $deadline];
-		$uri  = Config::Accounts(__FUNCTION__, '/'.$accountId);
+		$uri  = Urls::Accounts(__FUNCTION__, '/'.$accountId);
 
 		return $this->client->delete($uri, array_merge($this->requestData, $data));
 	}

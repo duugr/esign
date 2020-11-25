@@ -5,6 +5,7 @@ namespace ESign;
 use ESign\Service\Http;
 
 use ESign\Traits\Accounts;
+use ESign\Traits\Flows;
 use ESign\Traits\Organizations;
 use ESign\Traits\Seals;
 use ESign\Traits\Token;
@@ -17,6 +18,7 @@ class ESign
 	use Organizations;
 	use Seals;
 	use Files;
+	use Flows;
 
 	//测试环境请求地址
 	private $hostDev = "https://smlopenapi.esign.cn/v1/";
@@ -61,18 +63,18 @@ class ESign
 		//
 		//
 		//		//创建签署流程
-		//		$SignFlows = $this->GenerateSignFlows();
+		//		$Flows = $this->GenerateSignFlows();
 		//
 		//		$filePath  = "pdf/test.pdf";
 		//		$this->UpLoadFile($this->upsloadUrl, $filePath);
 		//
 		//		//流程文档添加
-		//		$SignFlows->addDocumnet($addaDocumnet, $flowid, $fileId);
+		//		$Flows->addDocumnet($addaDocumnet, $flowid, $fileId);
 		//		//添加平台自动盖章签署区
 		//		echo "\n";
-		//		$res = $SignFlows->addPlatformSign($addPlatformSign, $flowid, $fileId);
+		//		$res = $Flows->addPlatformSign($addPlatformSign, $flowid, $fileId);
 		//		//添加手动盖章签署区
-		//		$res = $SignFlows->addHandSign($addHandSign, $flowid, $fileId, $accountId);
+		//		$res = $Flows->addHandSign($addHandSign, $flowid, $fileId, $accountId);
 		//		echo "流程文本域添加结果\n";
 	}
 

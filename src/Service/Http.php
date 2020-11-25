@@ -23,6 +23,13 @@ class Http
 		]);
 	}
 
+	/**
+	 * @param $uri
+	 * @param $data
+	 *
+	 * @return false|mixed
+	 * @throws \GuzzleHttp\Exception\GuzzleException
+	 */
 	public function get($uri, $data) {
 		try {
 			$response = $this->client->get($uri, $data);
@@ -43,7 +50,7 @@ class Http
 		return false;
 	}
 
-	public function delete($uri, $data) {
+	public function delete($uri, $data):bool {
 		try {
 			$response = $this->client->delete($uri, $data);
 			$body     = $response->getBody()->getContents();
@@ -63,6 +70,13 @@ class Http
 		return false;
 	}
 
+	/**
+	 * @param $uri
+	 * @param $data
+	 *
+	 * @return false|mixed
+	 * @throws \GuzzleHttp\Exception\GuzzleException
+	 */
 	public function post($uri, $data) {
 		try {
 			$response = $this->client->post($uri, $data);
@@ -72,6 +86,34 @@ class Http
 
 			if ($result['code'] == 0 && isset($result['data'])) {
 				return $result['data'];
+			} else {
+				$this->errCode    = $result['code'] ?? -1;
+				$this->errMessage = $result['message'] ?? '';
+			}
+		} catch (RequestException $e) {
+			$this->errCode    = $e->getCode();
+			$this->errMessage = $e->getMessage();
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param $uri
+	 * @param $data
+	 *
+	 * @return bool
+	 * @throws \GuzzleHttp\Exception\GuzzleException
+	 */
+	public function put($uri, $data):bool {
+		try {
+			$response = $this->client->put($uri, $data);
+			$body     = $response->getBody()->getContents();
+
+			$result = (array) json_decode($body, true);
+
+			if ($result['code'] == 0) {
+				return true;
 			} else {
 				$this->errCode    = $result['code'] ?? -1;
 				$this->errMessage = $result['message'] ?? '';
