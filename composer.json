@@ -17,5 +17,15 @@
         "psr-4": {
             "ESign\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ESign\\ESignServiceProvider"
+            ],
+            "aliases": {
+                "ESign": "ESign\\Facades\\ESign"
+            }
+        }
     }
 }
