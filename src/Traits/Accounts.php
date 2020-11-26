@@ -37,9 +37,9 @@ trait Accounts
 	 * （1）对接方调用本接口在e签宝平台中创建个人账号，后续有关该用户的所有操作都需使用该用户的accountId。如提供用户证件信息，则将根据提供的用户证件信息申请数字证书。
 	 * （2）创建账户的同时会生成一个默认的个人印章，默认印章可通过查询个人印章接口查到，默认印章样式如下：
 	 */
-	public function accountsCreateByThirdPartyUserId($userUniqueId, $name, $idNumber, $mobile, $email, $idType = 'CRED_PSN_CH_IDCARD') {
+	public function AccountsCreateByThirdPartyUserId($userUniqueId, $name, $idNumber, $mobile, $email, $idType = 'CRED_PSN_CH_IDCARD') {
 		$data = [
-			"thirdPartyUserId" => $userUniqueId,
+			"thirdPartyUserId" => $thirdPartyUserId,
 			"name"             => $name,
 			"idType"           => $idType,
 			"idNumber"         => $idNumber,
@@ -52,7 +52,7 @@ trait Accounts
 	}
 
 	//个人账户修改(按照账号ID修改)
-	public function accountsUpdateByAccountId($accountId, $name, $idNumber, $mobile, $email, $idType = 'CRED_PSN_CH_IDCARD') {
+	public function AccountsUpdateByAccountId($accountId, $name, $idNumber, $mobile, $email, $idType = 'CRED_PSN_CH_IDCARD') {
 		$data = [
 			"name"     => $name,
 			"idType"   => $idType,
@@ -67,9 +67,9 @@ trait Accounts
 	}
 
 	//个人账户修改(按照第三方用户ID修改)
-	public function accountsUpdateByThirdId($userUniqueId, $name, $idNumber, $mobile, $email, $idType = 'CRED_PSN_CH_IDCARD') {
+	public function AccountsUpdateByThirdId($thirdPartyUserId, $name, $idNumber, $mobile, $email, $idType = 'CRED_PSN_CH_IDCARD') {
 		$data = [
-			'query'    => ["thirdPartyUserId" => $userUniqueId],
+			'query'    => ["thirdPartyUserId" => $thirdPartyUserId],
 			"name"     => $name,
 			"idType"   => $idType,
 			"idNumber" => $idNumber,
@@ -82,22 +82,22 @@ trait Accounts
 	}
 
 	//查询个人账户（按照账户ID查询）
-	public function accountsGetByAccountId($accountId) {
+	public function AccountsGetByAccountId($accountId) {
 		$uri = Urls::Accounts(__FUNCTION__, $accountId);
 
 		return $this->client->get($uri, $this->requestData);
 	}
 
 	//查询个人账户（按照第三方用户ID查询）
-	public function accountsGetByThirdId($thirdPartyUserId) {
+	public function AccountsGetByThirdId($thirdPartyUserId) {
 		$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
-		$uri  = Urls::Accounts(__FUNCTION__);
+		$uri  = Urls::Accounts(__FUNCTION__,'/', ['thirdPartyUserId' => $thirdPartyUserId]);
 
 		return $this->client->get($uri, array_merge($this->requestData, $data));
 	}
 
 	//注销个人账户（按照账号ID注销）
-	public function accountsDeleteByAccountId($accountId) {
+	public function AccountsDeleteByAccountId($accountId) {
 		$uri = Urls::Accounts(__FUNCTION__, $accountId);
 
 		$response = $this->client->delete($uri, $this->requestData);
@@ -105,7 +105,7 @@ trait Accounts
 	}
 
 	//注销个人账户（按照第三方用户ID注销）
-	public function accountsDeleteByThirdId($thirdPartyUserId) {
+	public function AccountsDeleteByThirdId($thirdPartyUserId) {
 		$data     = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
 		$uri      = Urls::Accounts(__FUNCTION__);
 		$response = $this->client->delete($uri, array_merge($this->requestData, $data));
@@ -113,7 +113,7 @@ trait Accounts
 	}
 
 	//设置签署密码
-	public function accountsSetSignPwd($accountId, $password) {
+	public function AccountsSetSignPwd($accountId, $password) {
 		$uri = Urls::Accounts(__FUNCTION__, '/'.$accountId.'/');
 
 		$data = ["password" => md5($password)];
@@ -128,7 +128,7 @@ trait Accounts
 	 *
 	 * @return false|mixed
 	 */
-	public function accountsSignAuth($accountId, $deadline) {
+	public function AccountsSignAuth($accountId, $deadline) {
 		$data = empty($deadline) ? [] : ['deadline' => $deadline];
 		$uri  = Urls::Accounts(__FUNCTION__, '/'.$accountId);
 

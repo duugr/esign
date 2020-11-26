@@ -19,7 +19,7 @@ trait Token
 			]
 		];
 
-		$response = $this->client->get(Urls::AccessToken, $data);
+		$response = $this->client->getNoHeader(Urls::AccessToken, $data);
 		if (is_bool($response)) {
 			return $response;
 		}

@@ -13,7 +13,7 @@ use ESign\Urls;
 trait Files
 {
 	//文件直传创建待签署文件
-	public function sgetUploadUrl($upsloadUrl, $filePath) {
+	public function SgetUploadUrl($upsloadUrl, $filePath) {
 		$fileName    = basename($filePath);
 		$fileSize    = filesize($filePath);
 		$contentType = 'application/pdf';

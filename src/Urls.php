@@ -9,9 +9,9 @@ class Urls
 
 	public static function Accounts($path, $delimiter = '/') {
 		switch ($path) {
-			case 'accountsGetByAccountId':
-			case 'accountsUpdateByAccountId':
-			case 'accountsDeleteByAccountId':
+			case 'AccountsGetByAccountId':
+			case 'AccountsUpdateByAccountId':
+			case 'AccountsDeleteByAccountId':
 				return str_replace('{accountId}', $delimiter, 'accounts/{accountId}');
 			default:
 				return static::getUri($path, $delimiter);
@@ -20,9 +20,9 @@ class Urls
 
 	public static function Org($path, $delimiter = '/') {
 		switch ($path) {
-			case 'organizationsGetByOrgId':
-			case 'organizationsUpdateByOrgId':
-			case 'organizationsDeleteByOrgId':
+			case 'OrganizationsGetByOrgId':
+			case 'OrganizationsUpdateByOrgId':
+			case 'OrganizationsDeleteByOrgId':
 				return str_replace('{orgId}', $delimiter, 'organizations/{orgId}');
 			default:
 				return static::getUri($path, $delimiter);
@@ -102,12 +102,15 @@ class Urls
 			case 'GetAttachments':
 			case 'DeleteAttachments':
 				return str_replace('{flowId}', $delimiter, 'signflows/{flowId}/attachments');
+
+			case 'SearchWords':
+				return str_replace('{flowId}', $delimiter, 'documents/{fileId}/searchWordsPosition');
 		}
 	}
 
 	static function getUri($path, $delimiter = '/'): string {
 		return preg_replace_callback('/(^.*?)(?=[A-Z])([A-Z])/u', function ($matches) use ($delimiter) {
 			return lcfirst($matches[1]).$delimiter.lcfirst($matches[2]);
-		}, $path);
+		}, lcfirst($path));
 	}
 }

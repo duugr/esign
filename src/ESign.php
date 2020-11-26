@@ -7,6 +7,7 @@ use ESign\Service\Http;
 use ESign\Traits\Accounts;
 use ESign\Traits\Flows;
 use ESign\Traits\Organizations;
+use ESign\Traits\Position;
 use ESign\Traits\Seals;
 use ESign\Traits\Token;
 use ESign\Traits\Files;
@@ -19,6 +20,7 @@ class ESign
 	use Seals;
 	use Files;
 	use Flows;
+	use Position;
 
 	//测试环境请求地址
 	private $hostDev = "https://smlopenapi.esign.cn/v1/";

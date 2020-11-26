@@ -35,7 +35,7 @@ trait Organizations
 	 *
 	 * @return false|mixed
 	 */
-	public function organizationsCreateByThirdPartyUserId($thirdPartyUserId, $creator, $name, $idType = 'CRED_ORG_USCC', $idNumber, $orgLegalIdNumber, $orgLegalName) {
+	public function OrganizationsCreateByThirdPartyUserId($thirdPartyUserId, $creator, $name, $idType = 'CRED_ORG_USCC', $idNumber, $orgLegalIdNumber, $orgLegalName) {
 		$data = [
 			'thirdPartyUserId' => $thirdPartyUserId,
 			'creator'          => $creator,
@@ -76,7 +76,7 @@ trait Organizations
 	 *
 	 * @return false|mixed
 	 */
-	public function organizationsUpdateByOrgId($orgId, $name, $idType = 'CRED_ORG_USCC', $idNumber, $orgLegalIdNumber, $orgLegalName) {
+	public function OrganizationsUpdateByOrgId($orgId, $name, $idType = 'CRED_ORG_USCC', $idNumber, $orgLegalIdNumber, $orgLegalName) {
 		$data = [
 			"name"             => $name,
 			"idType"           => $idType,
@@ -113,7 +113,7 @@ trait Organizations
 	 *
 	 * @return false|mixed
 	 */
-	public function organizationsUpdateByThirdId($thirdPartyUserId, $name, $idType = 'CRED_ORG_USCC', $idNumber) {
+	public function OrganizationsUpdateByThirdId($thirdPartyUserId, $name, $idType = 'CRED_ORG_USCC', $idNumber) {
 		$data = [
 			'query'    => ["thirdPartyUserId" => $thirdPartyUserId],
 			"name"     => $name,
@@ -133,14 +133,14 @@ trait Organizations
 	 *
 	 * @return false|mixed
 	 */
-	public function organizationsGetByOrgId($orgId) {
+	public function OrganizationsGetByOrgId($orgId) {
 		$uri = Urls::Org(__FUNCTION__, $orgId);
 
 		return $this->client->get($uri, $this->requestData);
 	}
 
 	//查询机构账号（按照第三方机构ID查询）
-	public function organizationsGetByThirdId($thirdPartyUserId) {
+	public function OrganizationsGetByThirdId($thirdPartyUserId) {
 		$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
 		$uri  = Urls::Org(__FUNCTION__);
 
@@ -148,14 +148,14 @@ trait Organizations
 	}
 
 	//注销机构账号（按照账号ID注销）
-	public function organizationsDeleteByOrgId($orgId) {
+	public function OrganizationsDeleteByOrgId($orgId) {
 		$uri = Urls::Org(__FUNCTION__, $orgId);
 
 		return $this->client->delete($uri, $this->requestData);
 	}
 
 	//注销机构账号（按照第三方机构ID注销）
-	public function organizationsDeleteByThirdId($thirdPartyUserId) {
+	public function OrganizationsDeleteByThirdId($thirdPartyUserId) {
 		$data = ['query' => ['thirdPartyUserId' => $thirdPartyUserId]];
 		$uri  = Urls::Org(__FUNCTION__);
 
