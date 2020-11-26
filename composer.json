@@ -2,6 +2,7 @@
     "name": "russell/esign",
     "description": "e签宝 悟空接口",
     "type": "library",
+    "license": "BSD-4-Clause",
     "authors": [
         {
             "name": "Russell",
