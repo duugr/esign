@@ -37,7 +37,7 @@ trait Accounts
 	 * （1）对接方调用本接口在e签宝平台中创建个人账号，后续有关该用户的所有操作都需使用该用户的accountId。如提供用户证件信息，则将根据提供的用户证件信息申请数字证书。
 	 * （2）创建账户的同时会生成一个默认的个人印章，默认印章可通过查询个人印章接口查到，默认印章样式如下：
 	 */
-	public function AccountsCreateByThirdPartyUserId($userUniqueId, $name, $idNumber, $mobile, $email, $idType = 'CRED_PSN_CH_IDCARD') {
+	public function AccountsCreateByThirdPartyUserId($thirdPartyUserId, $name, $idNumber, $mobile, $email, $idType = 'CRED_PSN_CH_IDCARD') {
 		$data = [
 			"thirdPartyUserId" => $thirdPartyUserId,
 			"name"             => $name,
