@@ -3,6 +3,7 @@
 
 namespace ESign\Traits;
 
+use ESign\Service\File;
 use ESign\Urls;
 
 /**
@@ -53,19 +54,41 @@ trait Files
 	 *                fileId 文件Id
 	 *                uploadUrl 文件直传地址, 可以重复使用，但是只能传一样的文件，有效期一小时
 	 */
-	public function GetUploadUrl(string $contentMd5, string $contentType, bool $convert2Pdf, string $fileName, int $fileSize, string $accountId) {
+	public function GetUploadUrl(string $contentMd5, string $contentType, bool $convert2Pdf, string $fileName, int $fileSize, string $accountId = '') {
 		$data = [
 			'contentMd5'  => $contentMd5,
 			'contentType' => $contentType,
 			'convert2Pdf' => $convert2Pdf,
 			'fileName'    => $fileName,
 			'fileSize'    => $fileSize,
-			'accountId'   => $accountId,
 		];
+		if ($accountId) {
+			$data['accountId'] = $accountId;
+		}
 
 		$uri = Urls::Files(__FUNCTION__);
 
 		return $this->client->post($uri, array_merge($this->requestData, $data));
+	}
+
+	public function UploadFile(string $filePath, string $contentType, bool $convert2Pdf, string $accountId = '') {
+		$contentMd5 = File::Base64Md5($filePath);
+		$fileName   = basename($filePath);
+		$fileSize   = filesize($filePath);
+
+		$result = $this->GetUploadUrl($contentMd5, $contentType, $convert2Pdf, $fileName, $fileSize, $accountId);
+		if (!$result) {
+			return false;
+		}
+		$header  = [
+			'Content-Type:application/pdf',
+			'Content-Md5:'.$contentMd5
+		];
+		$content = file_get_contents($fileName);
+		if ($this->client->putContent($result['uploadUrl'], $header, $content)) {
+			return $result['fileId'];
+		}
+		return false;
 	}
 
 	/**

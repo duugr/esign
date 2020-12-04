@@ -193,4 +193,31 @@ class Http
 
 		return false;
 	}
+
+	/**
+	 * @param $uri
+	 * @param $data
+	 *
+	 * @return bool
+	 * @throws \GuzzleHttp\Exception\GuzzleException
+	 */
+	public function putContent($uri, $header, $content): bool {
+		try {
+
+			$request  = new Request('PUT', $uri, $header, $content);
+			$response = $this->client->send($request, ['timeout' => 2]);
+
+			if ($response->getStatusCode() == 200) {
+				return true;
+			} else {
+				$this->errCode    = $result['code'] ?? -1;
+				$this->errMessage = $result['message'] ?? '';
+			}
+		} catch (RequestException $e) {
+			$this->errCode    = $e->getCode();
+			$this->errMessage = $e->getMessage();
+		}
+
+		return false;
+	}
 }
