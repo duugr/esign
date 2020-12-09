@@ -93,7 +93,7 @@ trait Flows
 	 *
 	 */
 	public function CreateFlowOneStep(array $docs, array $flowInfo, array $signers, array $copiers = [], array $attachments = []) {
-		$data = [
+		$data['json'] = [
 			'docs'     => $docs,
 			'flowInfo' => $flowInfo,
 			'signers'  => $signers
@@ -191,7 +191,7 @@ trait Flows
 	public function StartSignFlows(string $flowId) {
 		$uri = Urls::Flows(__FUNCTION__, $flowId);
 
-		return $this->client->get($uri,$this->requestData);
+		return $this->client->put($uri,$this->requestData);
 	}
 	// 签署流程撤销 PUT signflows/{flowId}/revoke
 	public function RevokeSignFlows(string $flowId,string $operatorId='', string $revokeReason='') {
@@ -251,24 +251,23 @@ trait Flows
 	 *
 	 * @return mixed
 	 */
-	public function CreateDocuments(string $flowId, string $fileId, string $fileName = '', int $encryption = 0, string $filePassword = '') {
-		$data = [
-			'docs' => [
-				'fileId' => $fileId,
-			]
+	public function AddDocuments(string $flowId, string $fileId, string $fileName = '', int $encryption = 0, string $filePassword = '') {
+		$docs = [
+		    'fileId' => $fileId,
 		];
 		if ($fileName) {
-			$data['docs']['fileName'] = $fileName;
+			$docs['fileName'] = $fileName;
 		}
 		if ($encryption) {
-			$data['docs']['encryption'] = $encryption;
+			$docs['encryption'] = $encryption;
 		}
 		if ($filePassword) {
-			$data['docs']['filePassword'] = $filePassword;
+			$docs['filePassword'] = $filePassword;
 		}
+        $data['docs'][] = $docs;
 		$uri = Urls::Flows(__FUNCTION__, $flowId);
 
-		return $this->client->get($uri, array_merge($this->requestData, $data));
+		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
 
 	/**
@@ -407,7 +406,7 @@ trait Flows
 	 */
 	public function SignFieldsPlatformSign(string $flowId, array $signFields) {
 		$data = [
-			'signFields' => $signFields
+			'signfields' => $signFields
 		];
 		$uri  = Urls::Flows(__FUNCTION__, $flowId);
 
@@ -429,7 +428,7 @@ trait Flows
 	 */
 	public function SignFieldsAutoSign(string $flowId, array $signFields) {
 		$data = [
-			'signFields' => $signFields
+			'signfields' => $signFields
 		];
 		$uri  = Urls::Flows(__FUNCTION__, $flowId);
 
@@ -448,7 +447,7 @@ trait Flows
 	 */
 	public function SignFieldsHandSign(string $flowId, array $signFields) {
 		$data = [
-			'signFields' => $signFields
+			'signfields' => $signFields
 		];
 		$uri  = Urls::Flows(__FUNCTION__, $flowId);
 

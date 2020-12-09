@@ -1,6 +1,5 @@
 <?php
 
-
 namespace ESign\Traits;
 
 use ESign\Service\File;
@@ -13,26 +12,6 @@ use ESign\Urls;
  */
 trait Files
 {
-	//文件直传创建待签署文件
-	public function SgetUploadUrl($upsloadUrl, $filePath) {
-		$fileName    = basename($filePath);
-		$fileSize    = filesize($filePath);
-		$contentType = 'application/pdf';
-		$contentMd5  = $this->getContentBase64Md5($filePath);
-		$arr         = ['fileName' => $fileName, 'fileSize' => $fileSize, 'contentType' => $contentType, 'contentMd5' => $contentMd5];
-		$data        = json_encode($arr);
-		echo $data;
-		$until          = new Until();
-		$return_content = $until->doPost($upsloadUrl, $data, $this->appId, $this->token);
-		var_dump("获取文件fileId以及文件上传地址：".$return_content);
-		$result = (array) json_decode($return_content, true);
-		$data2  = $result['data'];
-		echo "\n";
-		echo '--------';
-		return $data2;
-	}
-
-
 	/**
 	 * 通过上传方式创建文件
 	 *
@@ -72,6 +51,7 @@ trait Files
 	}
 
 	public function UploadFile(string $filePath, string $contentType, bool $convert2Pdf, string $accountId = '') {
+		$filePath = realpath($filePath);
 		$contentMd5 = File::Base64Md5($filePath);
 		$fileName   = basename($filePath);
 		$fileSize   = filesize($filePath);
@@ -80,12 +60,8 @@ trait Files
 		if (!$result) {
 			return false;
 		}
-		$header  = [
-			'Content-Type:application/pdf',
-			'Content-Md5:'.$contentMd5
-		];
-		$content = file_get_contents($fileName);
-		if ($this->client->putContent($result['uploadUrl'], $header, $content)) {
+
+		if ($this->client->putContent($result['uploadUrl'], $contentMd5, $filePath)) {
 			return $result['fileId'];
 		}
 		return false;
@@ -232,7 +208,6 @@ trait Files
 
 		return $this->client->post($uri, array_merge($this->requestData, $data));
 	}
-
 
 	/**
 	 * 查询文件详情/下载文件

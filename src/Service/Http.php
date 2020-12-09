@@ -1,8 +1,6 @@
 <?php
 
-
 namespace ESign\Service;
-
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -17,7 +15,7 @@ class Http
 	public function __construct($host) {
 		$this->client = new Client([
 			// Base URI is used with relative requests
-			'base_uri' => $host,
+			'base_uri' => $host
 			// You can set any number of default request options.
 			//			'timeout'  => 5.0,
 
@@ -38,7 +36,7 @@ class Http
 
 			$result = (array) json_decode($body, true);
 
-			if ($result['code'] == 0 && isset($result['data']['token'])) {
+			if (0 == $result['code'] && isset($result['data']['token'])) {
 				return $result['data'];
 			} else {
 				$this->errCode    = $result['code'] ?? -1;
@@ -60,22 +58,11 @@ class Http
 	 */
 	public function get($uri, $data) {
 		try {
-			$header = $data['headers'] ?? [];
-			unset($data['headers']);
-			if (isset($data['query'])) {
-				$uri = sprintf("%s?%s", $uri, http_build_query($data['query']));
-				unset($data['query']);
-			}
+			$response = $this->client->get($uri, $data);
+			$body     = $response->getBody()->getContents();
+			$result   = (array) json_decode($body, true);
 
-			$request  = new Request('GET', $uri, $header);
-			$response = $this->client->send($request, ['timeout' => 2]);
-
-			//			$response = $this->client->get($uri, $data);
-			$body = $response->getBody()->getContents();
-
-			$result = (array) json_decode($body, true);
-
-			if ($result['code'] == 0 && isset($result['data']['token'])) {
+			if (0 == $result['code'] && isset($result['data'])) {
 				return $result['data'];
 			} else {
 				$this->errCode    = $result['code'] ?? -1;
@@ -105,7 +92,7 @@ class Http
 
 			$result = (array) json_decode($body, true);
 
-			if ($result['code'] == 0 && isset($result['data'])) {
+			if (0 == $result['code'] && isset($result['data'])) {
 				return true;
 			} else {
 				$this->errCode    = $result['code'] ?? -1;
@@ -127,22 +114,22 @@ class Http
 	 */
 	public function post($uri, $data) {
 		try {
-			$header = $data['headers'];
-			unset($data['headers']);
-			if (isset($data['query'])) {
-				$uri = sprintf("%s?%s", $uri, http_build_query($data['query']));
-				unset($data['query']);
-			}
+            $header = $data['headers'];
+            unset($data['headers']);
+            if (isset($data['query'])) {
+                $uri = sprintf("%s?%s", $uri, http_build_query($data['query']));
+                unset($data['query']);
+            }
 
-			$request  = new Request('POST', $uri, $header, json_encode($data, JSON_UNESCAPED_UNICODE));
-			$response = $this->client->send($request, ['timeout' => 2]);
+            $request  = new Request('POST', $uri, $header, json_encode($data, JSON_UNESCAPED_UNICODE));
+            $response = $this->client->send($request, ['timeout' => 2]);
 
-			//			$response = $this->client->post($uri, $data);
+//            $response = $this->client->post($uri, $data);
 			$body = $response->getBody()->getContents();
 
 			$result = (array) json_decode($body, true);
 
-			if ($result['code'] == 0 && isset($result['data'])) {
+			if (0 == $result['code'] && isset($result['data'])) {
 				return $result['data'];
 			} else {
 				$this->errCode    = $result['code'] ?? -1;
@@ -165,22 +152,12 @@ class Http
 	 */
 	public function put($uri, $data): bool {
 		try {
-			$header = $data['headers'];
-			unset($data['headers']);
-			if (isset($data['query'])) {
-				$uri = sprintf("%s?%s", $uri, http_build_query($data['query']));
-				unset($data['query']);
-			}
-
-			$request  = new Request('PUT', $uri, $header, json_encode($data, JSON_UNESCAPED_UNICODE));
-			$response = $this->client->send($request, ['timeout' => 2]);
-
-			//			$response = $this->client->put($uri, $data);
+			$response = $this->client->put($uri, $data);
 			$body = $response->getBody()->getContents();
 
 			$result = (array) json_decode($body, true);
 
-			if ($result['code'] == 0) {
+			if (0 == $result['code']) {
 				return true;
 			} else {
 				$this->errCode    = $result['code'] ?? -1;
@@ -201,17 +178,23 @@ class Http
 	 * @return bool
 	 * @throws \GuzzleHttp\Exception\GuzzleException
 	 */
-	public function putContent($uri, $header, $content): bool {
+	public function putContent($uri, $contentMd5, $filePath): bool {
 		try {
 
-			$request  = new Request('PUT', $uri, $header, $content);
-			$response = $this->client->send($request, ['timeout' => 2]);
+			$body['body']    = fopen($filePath, 'r');
+			$body['headers'] = [
+				'stream'       => true,
+				'Content-Type' => 'application/pdf',
+				'Content-Md5'  => $contentMd5
+			];
+
+			$response = $this->client->request('PUT', $uri, $body);
 
 			if ($response->getStatusCode() == 200) {
 				return true;
 			} else {
-				$this->errCode    = $result['code'] ?? -1;
-				$this->errMessage = $result['message'] ?? '';
+				$this->errCode    = $response->getStatusCode() ?? -1;
+				$this->errMessage = $response->getReasonPhrase() ?? $response->getBody() ?? '';
 			}
 		} catch (RequestException $e) {
 			$this->errCode    = $e->getCode();

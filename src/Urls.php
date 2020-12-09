@@ -93,7 +93,7 @@ class Urls
 			case 'VoucherSignFlows':
 				return str_replace('{flowId}', $delimiter, '/api/v2/signflows/{flowId}/getVoucher');
 
-			case 'CreateDocuments':
+			case 'AddDocuments':
 			case 'DeleteDocuments':
 			case 'GetDocuments':
 				return str_replace('{flowId}', $delimiter, 'signflows/{flowId}/documents');
@@ -103,8 +103,33 @@ class Urls
 			case 'DeleteAttachments':
 				return str_replace('{flowId}', $delimiter, 'signflows/{flowId}/attachments');
 
+			case 'SignFieldsPlatformSign':
+				return str_replace('{flowId}', $delimiter, 'signflows/{flowId}/signfields/platformSign');
+			case 'SignFieldsAutoSign':
+				return str_replace('{flowId}', $delimiter, 'signflows/{flowId}/signfields/autoSign');
+			case 'SignFieldsHandSign':
+				return str_replace('{flowId}', $delimiter, 'signflows/{flowId}/signfields/handSign');
+			case 'GetSignFields':
+			case 'DeleteSignFields':
+				return str_replace('{flowId}', $delimiter, 'signflows/{flowId}/signfields');
+
+			case 'Signers':
+				return str_replace('{flowId}', $delimiter, 'signflows/{flowId}/signers');
+			case 'SignersRushSign':
+				return str_replace('{flowId}', $delimiter, 'signflows/{flowId}/signers/rushsign');
+			case 'SignersExecuteUrl':
+				return str_replace('{flowId}', $delimiter, 'signflows/{flowId}/executeUrl');
+
+			case 'DataSign':
+				return 'dataSign';
+			case 'DataSignVerify':
+				return 'dataSign/verify';
+
+			case 'DocumentVerify':
+				return str_replace('{fileId}', $delimiter, 'documents/{fileId}/verify');
+
 			case 'SearchWords':
-				return str_replace('{flowId}', $delimiter, 'documents/{fileId}/searchWordsPosition');
+				return str_replace('{fileId}', $delimiter, 'documents/{fileId}/searchWordsPosition');
 		}
 	}
 
