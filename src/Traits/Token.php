@@ -10,20 +10,21 @@ use GuzzleHttp\Exception\RequestException;
 
 trait Token
 {
-	public function GetToken() {
-		$data = [
-			'query' => [
-				"appId"     => $this->appId,
-				"secret"    => $this->secret,
-				"grantType" => 'client_credentials'
-			]
-		];
+    public function GetToken()
+    {
+        $data = [
+            'query' => [
+                "appId"     => $this->appId,
+                "secret"    => $this->secret,
+                "grantType" => 'client_credentials'
+            ]
+        ];
 
-		$response = $this->client->getNoHeader(Urls::AccessToken, $data);
-		if (is_bool($response)) {
-			return $response;
-		}
-		$this->token = $response['token'];
-		return $response['token'];
-	}
+        $response = $this->client->getNoHeader(Urls::AccessToken, $data);
+        if (is_bool($response)) {
+            return $response;
+        }
+        $this->token = $response['token'];
+        return $response['token'];
+    }
 }
